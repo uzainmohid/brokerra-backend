@@ -1,0 +1,170 @@
+// ─── Prisma Schema — Brokerra CRM ─────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── User ─────────────────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  phone     String?
+  company   String?
+  role      String   @default("broker")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  leads Lead[] @relation("AssignedLeads")
+
+  @@map("users")
+}
+
+// ─── Lead ─────────────────────────────────────────────────────────────────────
+
+model Lead {
+  id          String          @id @default(uuid())
+  name        String
+  phone       String
+  email       String?
+  budget      Float?
+  source      LeadSource      @default(OTHER)
+  status      LeadStatus      @default(NEW)
+  temperature LeadTemperature @default(WARM)
+  propertyType String?
+  location    String?
+  noteText    String?
+  tags        String[]        @default([])
+
+  // Priority & scoring
+  priorityScore Int     @default(0)
+  isHotLead     Boolean @default(false)
+  isOverdue     Boolean @default(false)
+
+  // Follow-up tracking
+  lastFollowUp   DateTime?
+  nextFollowUpAt DateTime?
+
+  // AI
+  aiSummary String?
+
+  // Relations
+  assignedTo   String?
+  assignedUser User?   @relation("AssignedLeads", fields: [assignedTo], references: [id])
+
+  activities   ActivityLog[]
+  followUps    FollowUpHistory[]
+  summaries    LeadSummary[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("leads")
+}
+
+// ─── Activity Log ─────────────────────────────────────────────────────────────
+
+model ActivityLog {
+  id          String   @id @default(uuid())
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  type        ActivityType
+  description String
+  createdBy   String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@map("activity_logs")
+}
+
+// ─── Follow-up History ────────────────────────────────────────────────────────
+
+model FollowUpHistory {
+  id           String     @id @default(uuid())
+  leadId       String
+  lead         Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  note         String
+  followUpDate DateTime
+  type         FollowUpType @default(CALL)
+  outcome      String?
+  status       FollowUpStatus @default(PENDING)
+  createdBy    String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@map("follow_up_history")
+}
+
+// ─── Lead Summary (AI) ────────────────────────────────────────────────────────
+
+model LeadSummary {
+  id        String   @id @default(uuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  summary   String
+  createdAt DateTime @default(now())
+
+  @@map("lead_summaries")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  FOLLOW_UP
+  SITE_VISIT
+  NEGOTIATION
+  CLOSED
+  LOST
+}
+
+enum LeadTemperature {
+  HOT
+  WARM
+  COLD
+}
+
+enum LeadSource {
+  WHATSAPP
+  REFERRAL
+  WEBSITE
+  INSTAGRAM
+  FACEBOOK
+  PROPERTY_PORTAL
+  COLD_CALL
+  WALK_IN
+  OTHER
+}
+
+enum ActivityType {
+  CREATED
+  UPDATED
+  STATUS_CHANGED
+  NOTE_ADDED
+  FOLLOW_UP_SCHEDULED
+  FOLLOW_UP_COMPLETED
+  CONTACTED
+  AI_SUMMARY_GENERATED
+}
+
+enum FollowUpType {
+  CALL
+  WHATSAPP
+  EMAIL
+  SITE_VISIT
+  MEETING
+}
+
+enum FollowUpStatus {
+  PENDING
+  COMPLETED
+  MISSED
+}
