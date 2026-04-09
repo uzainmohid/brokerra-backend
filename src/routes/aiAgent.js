@@ -7,7 +7,7 @@
 const express    = require('express')
 const auth       = require('../middleware/auth')
 const controller = require('../controllers/aiAgentController')
-const { composeFollowUp } = require('../controllers/composeController') // ← NEW
+
 
 const router = express.Router()
 
@@ -21,6 +21,6 @@ router.get('/pipeline-health', controller.getPipelineHealth)
 // NEW: AI Follow-Up Composer
 // POST /api/ai-agent/compose-followup
 // Body: { leadId: string }
-router.post('/compose-followup', composeFollowUp)
+
 
 module.exports = router
