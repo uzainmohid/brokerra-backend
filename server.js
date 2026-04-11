@@ -65,6 +65,7 @@ app.use('/api/leads',     leadRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/export',    exportRoutes)
 app.use('/api/ai-agent',  aiAgentRoutes)   // ← NEW
+app.use('/api/ai-followup',  require('./src/routes/followUp'))
 
 // ─── 404 handler ─────────────────────────────────────────────────────────────
 app.use((_req, res) => {
