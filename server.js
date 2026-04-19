@@ -5,33 +5,22 @@ const cors         = require('cors')
 const errorHandler = require('./src/middleware/errorHandler')
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
-const authRoutes      = require('./src/routes/auth')
-const leadRoutes      = require('./src/routes/leads')
-const analyticsRoutes = require('./src/routes/analytics')
-const exportRoutes    = require('./src/routes/export')
-const aiAgentRoutes   = require('./src/routes/aiAgent')   // ← NEW
+const authRoutes       = require('./src/routes/auth')
+const leadRoutes       = require('./src/routes/leads')
+const analyticsRoutes  = require('./src/routes/analytics')
+const exportRoutes     = require('./src/routes/export')
+const aiFollowupRoutes = require('./src/routes/aiFollowup')
 
 const app  = express()
 const PORT = process.env.PORT || 5000
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, Render health checks)
-    if (!origin) return callback(null, true)
-    
-    const allowed = [
-      process.env.FRONTEND_URL,
-      'http://localhost:3000',
-      'http://127.0.0.1:3000',
-    ].filter(Boolean)
-
-    // Also allow any vercel.app subdomain automatically
-    if (allowed.includes(origin) || origin.endsWith('.vercel.app')) {
-      return callback(null, true)
-    }
-    callback(new Error('Not allowed by CORS'))
-  },
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -60,12 +49,11 @@ app.get('/health', (_req, res) => {
 })
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
-app.use('/api/auth',      authRoutes)
-app.use('/api/leads',     leadRoutes)
-app.use('/api/analytics', analyticsRoutes)
-app.use('/api/export',    exportRoutes)
-app.use('/api/ai-agent',  aiAgentRoutes)   // ← NEW
-app.use('/api/ai-followup',  require('./src/routes/followUp'))
+app.use('/api/auth',        authRoutes)
+app.use('/api/leads',       leadRoutes)
+app.use('/api/analytics',   analyticsRoutes)
+app.use('/api/export',      exportRoutes)
+app.use('/api/ai-followup', aiFollowupRoutes)
 
 // ─── 404 handler ─────────────────────────────────────────────────────────────
 app.use((_req, res) => {
@@ -82,14 +70,8 @@ app.listen(PORT, () => {
   console.log('╠══════════════════════════════════════════════╣')
   console.log(`║  🚀  Running on  http://localhost:${PORT}         ║`)
   console.log(`║  🌱  Environment: ${(process.env.NODE_ENV || 'development').padEnd(24)}║`)
+  console.log('║  ✅  AI Follow-up: ENABLED                   ║')
   console.log('╚══════════════════════════════════════════════╝\n')
-  console.log('  Routes:')
-  console.log('  POST /api/auth/register')
-  console.log('  POST /api/auth/login')
-  console.log('  GET  /api/leads')
-  console.log('  GET  /api/ai-agent/insights')
-  console.log('  GET  /api/ai-agent/priorities')
-  console.log('  GET  /api/ai-agent/pipeline-health\n')
 })
 
 module.exports = app
