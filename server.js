@@ -53,7 +53,7 @@ app.use('/api/auth',        authRoutes)
 app.use('/api/leads',       leadRoutes)
 app.use('/api/analytics',   analyticsRoutes)
 app.use('/api/export',      exportRoutes)
-app.use('/api/ai-followup', aiFollowup)
+app.use('/api/ai-followup', aiFollowupRoutes)
 
 // ─── 404 handler ─────────────────────────────────────────────────────────────
 app.use((_req, res) => {
