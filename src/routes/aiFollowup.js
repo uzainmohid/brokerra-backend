@@ -7,4 +7,9 @@ router.use(auth)
 
 router.post('/generate', ctrl.generateFollowUp)
 
+// ADD THIS (for testing)
+router.get('/test', (req, res) => {
+  res.json({ message: "AI Followup route working ✅" })
+})
+
 module.exports = router
