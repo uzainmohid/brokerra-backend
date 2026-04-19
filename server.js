@@ -9,6 +9,7 @@ const authRoutes       = require('./src/routes/auth')
 const leadRoutes       = require('./src/routes/leads')
 const analyticsRoutes  = require('./src/routes/analytics')
 const exportRoutes     = require('./src/routes/export')
+const aiAgentRoutes    = require('./src/routes/aiAgent')
 const aiFollowupRoutes = require('./src/routes/aiFollowup')
 
 const app  = express()
@@ -53,6 +54,7 @@ app.use('/api/auth',        authRoutes)
 app.use('/api/leads',       leadRoutes)
 app.use('/api/analytics',   analyticsRoutes)
 app.use('/api/export',      exportRoutes)
+app.use('/api/ai-agent', aiAgentRoutes)
 app.use('/api/ai-followup', aiFollowupRoutes)
 
 // ─── 404 handler ─────────────────────────────────────────────────────────────
