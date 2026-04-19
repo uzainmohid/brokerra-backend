@@ -16,7 +16,6 @@ async function generateFollowUpMessages(leadId, userId) {
     where: { id: leadId },
     include: {
       activities: { orderBy: { createdAt: 'desc' }, take: 5 },
-      notes:      { orderBy: { createdAt: 'desc' }, take: 3 },
       followUps:  { orderBy: { scheduledAt: 'desc' }, take: 3 },
     },
   })
