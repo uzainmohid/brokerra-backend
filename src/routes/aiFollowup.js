@@ -3,7 +3,7 @@ const ctrl   = require('../controllers/aiFollowupController')
 const auth   = require('../middleware/auth')
 
 // All AI followup routes require authentication
-router.use(auth)
+
 
 router.post('/generate', ctrl.generateFollowUp)
 
