@@ -74,6 +74,18 @@ app.listen(PORT, () => {
   console.log(`║  🌱  Environment: ${(process.env.NODE_ENV || 'development').padEnd(24)}║`)
   console.log('║  ✅  AI Follow-up: ENABLED                   ║')
   console.log('╚══════════════════════════════════════════════╝\n')
+  console.log('  Routes:')
+  console.log('  POST /api/auth/register')
+  console.log('  POST /api/auth/login')
+  console.log('  GET  /api/leads')
+  console.log('  POST /api/leads')
+  console.log('  GET  /api/leads/:id')
+  console.log('  PUT  /api/leads/:id')
+  console.log('  DELETE /api/leads/:id')
+  console.log('  POST /api/leads/:id/summarize')
+  console.log('  GET  /api/analytics')
+  console.log('  GET  /api/export/leads-csv')
+  console.log('  GET  /api/export/monthly-report\n')
 })
 
 module.exports = app
