@@ -28,7 +28,7 @@ async function generateFollowUpMessages(leadId, userId) {
 
   // Context analysis
   const now = dayjs()
-  const lastContact = lead.lastContactedAt ? dayjs(lead.lastContactedAt) : dayjs(lead.createdAt)
+  const lastContact = lead.lastFollowUp ? dayjs(lead.lastFollowUp) : dayjs(lead.createdAt)
   const inactiveDays = now.diff(lastContact, 'day')
   
   const status = STATUS_ENUM_TO_SLUG[lead.status] || lead.status
