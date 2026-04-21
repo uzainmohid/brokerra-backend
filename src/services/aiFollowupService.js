@@ -16,7 +16,7 @@ async function generateFollowUpMessages(leadId, userId) {
     where: { id: leadId },
     include: {
       activities: { orderBy: { createdAt: 'desc' }, take: 5 },
-      followUps:  { orderBy: { scheduledAt: 'desc' }, take: 3 },
+      followUps:  { orderBy: { followUpDate: 'desc' }, take: 3 },
     },
   })
 
@@ -57,7 +57,7 @@ async function generateFollowUpMessages(leadId, userId) {
   await prisma.activityLog.create({
     data: {
       leadId,
-      type:        'NOTE_ADDED',
+      type:        'AI_FOLLOWUP_GENERATED',
       description: `AI follow-up messages generated (${intentLabel})`,
       createdBy:   userId,
     },
