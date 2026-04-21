@@ -26,4 +26,4 @@ const generateFollowUp = async (req, res, next) => {
   }
 }
 
-module.exports = { generateFollowUp }
+module.exports = { generateFollowUp } 

@@ -86,6 +86,8 @@ app.listen(PORT, () => {
   console.log('  GET  /api/analytics')
   console.log('  GET  /api/export/leads-csv')
   console.log('  GET  /api/export/monthly-report\n')
+  console.log('  POST /api/ai-followup/generate')
+  console.log('  GET  /api/ai-followup/test')
 })
 
 module.exports = app
